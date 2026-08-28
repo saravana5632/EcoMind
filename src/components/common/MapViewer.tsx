@@ -74,13 +74,17 @@ export const MapViewer: React.FC<MapViewerProps> = ({
   const userMarkerRef = useRef<L.Marker | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
 
+  // Safe fallback coordinates (Default: Chennai / Thiruvallur agricultural belt)
+  const safeLat = typeof center?.latitude === 'number' && !isNaN(center.latitude) ? center.latitude : 13.0827;
+  const safeLng = typeof center?.longitude === 'number' && !isNaN(center.longitude) ? center.longitude : 80.2707;
+
   // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
-        center: [center.latitude, center.longitude],
+        center: [safeLat, safeLng],
         zoom: 11,
         zoomControl: false,
       });
@@ -99,7 +103,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
 
       // Handle map clicks if in interactive picker mode
       map.on('click', (e: L.LeafletMouseEvent) => {
-        if (interactivePicker && onLocationPick) {
+        if (interactivePicker && onLocationPick && e?.latlng) {
           onLocationPick({
             latitude: parseFloat(e.latlng.lat.toFixed(4)),
             longitude: parseFloat(e.latlng.lng.toFixed(4)),
@@ -121,8 +125,8 @@ export const MapViewer: React.FC<MapViewerProps> = ({
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    const lat = center.latitude;
-    const lng = center.longitude;
+    const lat = typeof center?.latitude === 'number' && !isNaN(center.latitude) ? center.latitude : 13.0827;
+    const lng = typeof center?.longitude === 'number' && !isNaN(center.longitude) ? center.longitude : 80.2707;
 
     map.setView([lat, lng], map.getZoom() || 11);
 
@@ -161,14 +165,14 @@ export const MapViewer: React.FC<MapViewerProps> = ({
     }).addTo(map);
 
     marker.bindTooltip(
-      `<b>${userType === 'FARMER' ? '👨‍🌾 Your Location' : '🏠 Base Location'}</b><br/>${center.village || center.district || 'Current Center'}`,
+      `<b>${userType === 'FARMER' ? '👨‍🌾 Your Location' : '🏠 Base Location'}</b><br/>${center?.village || center?.district || 'Current Center'}`,
       { permanent: false, direction: 'top', offset: [0, -18] }
     );
 
     if (interactivePicker) {
       marker.on('dragend', () => {
         const pos = marker.getLatLng();
-        if (onLocationPick) {
+        if (onLocationPick && pos) {
           onLocationPick({
             latitude: parseFloat(pos.lat.toFixed(4)),
             longitude: parseFloat(pos.lng.toFixed(4)),
@@ -199,7 +203,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
 
       circleRef.current = circle;
     }
-  }, [center.latitude, center.longitude, radiusKm, showRadiusCircle, userType, interactivePicker]);
+  }, [center?.latitude, center?.longitude, radiusKm, showRadiusCircle, userType, interactivePicker]);
 
   // Update Land Markers
   useEffect(() => {
@@ -210,6 +214,13 @@ export const MapViewer: React.FC<MapViewerProps> = ({
     markersLayer.clearLayers();
 
     lands.forEach((land) => {
+      const landLat = land?.location?.latitude;
+      const landLng = land?.location?.longitude;
+
+      if (typeof landLat !== 'number' || isNaN(landLat) || typeof landLng !== 'number' || isNaN(landLng)) {
+        return; // Skip invalid coordinates to prevent Leaflet crash
+      }
+
       const isSelected = selectedLandId === land.id;
       const isWithinRadius = land.isWithin20Km ?? (land.distanceKm !== undefined ? land.distanceKm <= 20 : true);
 
@@ -238,7 +249,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
         iconAnchor: [18, 18],
       });
 
-      const landMarker = L.marker([land.location.latitude, land.location.longitude], {
+      const landMarker = L.marker([landLat, landLng], {
         icon: landIcon,
       });
 
@@ -246,9 +257,9 @@ export const MapViewer: React.FC<MapViewerProps> = ({
       const popupHtml = `
         <div class="w-64 overflow-hidden rounded-2xl bg-white text-stone-900 shadow-md border border-[#e2e8dc]">
           <div class="h-28 w-full relative bg-stone-200 overflow-hidden">
-            <img src="${land.images[0] || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400'}" 
+            <img src="${(land.images && land.images[0]) || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400'}" 
                  class="w-full h-full object-cover" 
-                 alt="${land.name}" 
+                 alt="${land.name || 'Farmland'}" 
                  onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400'" />
             <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold uppercase rounded-md shadow-sm ${
               land.status === 'AVAILABLE'
@@ -257,7 +268,7 @@ export const MapViewer: React.FC<MapViewerProps> = ({
                 ? 'bg-amber-600 text-white'
                 : 'bg-blue-600 text-white'
             }">
-              ${land.status}
+              ${land.status || 'AVAILABLE'}
             </span>
             ${
               land.distanceKm !== undefined
@@ -269,8 +280,8 @@ export const MapViewer: React.FC<MapViewerProps> = ({
           </div>
           <div class="p-3">
             <div class="flex items-center justify-between text-[11px] text-stone-500 font-mono">
-              <span>${land.landCode}</span>
-              <span>${land.totalArea} ${land.areaUnit}</span>
+              <span>${land.landCode || 'LAND'}</span>
+              <span>${land.totalArea || 0} ${land.areaUnit || 'Acres'}</span>
             </div>
             <h4 class="font-bold text-sm text-stone-900 mt-0.5 line-clamp-1">${land.name || 'Land Plot'}</h4>
             <p class="text-xs text-stone-600 mt-1 flex items-center gap-1">
@@ -314,14 +325,21 @@ export const MapViewer: React.FC<MapViewerProps> = ({
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    const points: [number, number][] = [[center.latitude, center.longitude]];
-    lands.forEach((l) => points.push([l.location.latitude, l.location.longitude]));
+    const lat = typeof center?.latitude === 'number' && !isNaN(center.latitude) ? center.latitude : 13.0827;
+    const lng = typeof center?.longitude === 'number' && !isNaN(center.longitude) ? center.longitude : 80.2707;
+
+    const points: [number, number][] = [[lat, lng]];
+    lands.forEach((l) => {
+      if (typeof l?.location?.latitude === 'number' && !isNaN(l.location.latitude) && typeof l?.location?.longitude === 'number' && !isNaN(l.location.longitude)) {
+        points.push([l.location.latitude, l.location.longitude]);
+      }
+    });
 
     if (points.length > 1) {
       const bounds = L.latLngBounds(points);
       map.fitBounds(bounds, { padding: [40, 40] });
     } else {
-      map.setView([center.latitude, center.longitude], 12);
+      map.setView([lat, lng], 12);
     }
   };
 

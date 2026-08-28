@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered platform users including farmers, landlords, buyers, and admins",
+      "type": "object",
+      "properties": {
+        "firebaseUid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["FARMER", "LANDLORD", "BUYER", "ADMIN"] },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE", "BLOCKED"] },
+        "village": { "type": "string" },
+        "district": { "type": "string" },
+        "state": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "role", "email"]
+    },
+    "AgriLand": {
+      "title": "AgriLand",
+      "description": "Farmland plots listed by landlords for rental within the 20 KM radius",
+      "type": "object",
+      "properties": {
+        "landCode": { "type": "string" },
+        "landlordId": { "type": "string" },
+        "landlordName": { "type": "string" },
+        "name": { "type": "string" },
+        "totalArea": { "type": "number" },
+        "areaUnit": { "type": "string" },
+        "soilType": { "type": "string" },
+        "waterSource": { "type": "string" },
+        "pricePerYear": { "type": "number" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "village": { "type": "string" },
+            "district": { "type": "string" },
+            "state": { "type": "string" },
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" }
+          }
+        },
+        "status": { "type": "string", "enum": ["AVAILABLE", "RENTED", "PENDING_APPROVAL", "INACTIVE"] },
+        "verified": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["landCode", "landlordId", "name", "totalArea", "pricePerYear", "location", "status"]
+    },
+    "RentalRequest": {
+      "title": "RentalRequest",
+      "description": "Geospatially validated rental proposals between farmers and landowners within 20 KM",
+      "type": "object",
+      "properties": {
+        "landId": { "type": "string" },
+        "landCode": { "type": "string" },
+        "farmerId": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "landlordId": { "type": "string" },
+        "landlordName": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "CANCELLED", "ACTIVE", "COMPLETED"] },
+        "distanceKm": { "type": "number" },
+        "isWithin20Km": { "type": "boolean" },
+        "purposeCrop": { "type": "string" },
+        "proposedRent": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["landId", "farmerId", "landlordId", "status", "distanceKm"]
+    },
+    "AgriProduct": {
+      "title": "AgriProduct",
+      "description": "Farmer crop listings ready for direct buyer marketplace access",
+      "type": "object",
+      "properties": {
+        "farmerId": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "quantity": { "type": "number" },
+        "unit": { "type": "string" },
+        "expectedPrice": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["farmerId", "name", "quantity", "expectedPrice"]
+    }
+  },
+  "firestore": {
+    "rules": "rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if true;\n    }\n  }\n}"
+  }
+}

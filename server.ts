@@ -3,16 +3,19 @@ import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
 import { createServer as createViteServer } from 'vite';
-import apiRouter from './server/src/routes/index';
-import { errorHandler } from './server/src/middleware/errorMiddleware';
-import { requestLogger } from './server/src/middleware/loggingMiddleware';
-import { apiLimiter } from './server/src/middleware/rateLimitMiddleware';
-import { seedInitialAgriData } from './server/src/scripts/seed';
-import { logger } from './server/src/utils/logger';
+import apiRouter from './server/routes/index';
+import { errorHandler } from './server/middleware/errorMiddleware';
+import { requestLogger } from './server/middleware/loggingMiddleware';
+import { apiLimiter } from './server/middleware/rateLimitMiddleware';
+import { seedInitialAgriData } from './server/scripts/seed';
+import { logger } from './server/utils/logger';
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // Trust proxy for reverse proxies / Cloud Run environment
+  app.set('trust proxy', 1);
 
   // Security headers (configured to allow iframe preview and inline scripts/styles)
   app.use(

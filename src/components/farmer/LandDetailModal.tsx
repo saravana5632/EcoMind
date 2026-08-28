@@ -302,10 +302,10 @@ export const LandDetailModal: React.FC<LandDetailModalProps> = ({
             <h4 className="text-xs font-bold text-stone-700 mb-2">GPS Location on Agricultural Map</h4>
             <MapViewer
               center={{
-                latitude: land.location.latitude,
-                longitude: land.location.longitude,
-                district: land.location.district,
-                village: land.location.village,
+                latitude: land?.location?.latitude ?? 13.0827,
+                longitude: land?.location?.longitude ?? 80.2707,
+                district: land?.location?.district,
+                village: land?.location?.village,
               }}
               radiusKm={20}
               showRadiusCircle={true}

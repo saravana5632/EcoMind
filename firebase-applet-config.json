@@ -1,12 +1,12 @@
 {
-  "projectId": "pioneering-discipline-tlg2z",
-  "appId": "1:461152823278:web:e23468037a485cd92c50ff",
-  "apiKey": "AIzaSyALxHUq91r1PgiMfR0gx1L2scKbQfaeZVQ",
-  "authDomain": "pioneering-discipline-tlg2z.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-landlinksmartagr-079ab495-9a1b-45d8-909b-af88f5416a4a",
-  "storageBucket": "pioneering-discipline-tlg2z.firebasestorage.app",
-  "messagingSenderId": "461152823278",
+  "projectId": "ecowin",
+  "appId": "1:87482450533:web:49f036333583866cfa3c8c",
+  "apiKey": "AIzaSyBbK6Z9WBCVZscVQLRdcOiqGqH4-OtszS8",
+  "authDomain": "ecowin.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-ecomind-03411cdb-45cd-4d56-a01e-8428d89f4f8f",
+  "storageBucket": "ecowin.firebasestorage.app",
+  "messagingSenderId": "87482450533",
   "measurementId": "",
-  "oAuthClientId": "461152823278-df55l9pt0j7sgelcc0ngqae1g8pkbdrr.apps.googleusercontent.com",
+  "oAuthClientId": "87482450533-7k171i7rh75rldgec0utjcldn3cmph8k.apps.googleusercontent.com",
   "recaptchaSiteKey": ""
 }
