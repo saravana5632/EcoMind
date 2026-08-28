@@ -1,59 +1,52 @@
 import express from 'express';
 import path from 'path';
+import helmet from 'helmet';
+import cors from 'cors';
 import { createServer as createViteServer } from 'vite';
-import { authRouter } from './server/routes/authRoutes';
-import { landRouter } from './server/routes/landRoutes';
-import { rentalRouter } from './server/routes/rentalRoutes';
-import { adminRouter } from './server/routes/adminRoutes';
-import { notificationRouter } from './server/routes/notificationRoutes';
+import apiRouter from './server/src/routes/index';
+import { errorHandler } from './server/src/middleware/errorMiddleware';
+import { requestLogger } from './server/src/middleware/loggingMiddleware';
+import { apiLimiter } from './server/src/middleware/rateLimitMiddleware';
+import { seedInitialAgriData } from './server/src/scripts/seed';
+import { logger } from './server/src/utils/logger';
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // JSON Body Parser Middleware
+  // Security headers (configured to allow iframe preview and inline scripts/styles)
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+    })
+  );
+
+  // CORS Middleware
+  app.use(cors({ origin: true, credentials: true }));
+
+  // JSON and URL-encoded body parsing
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-  // API Request Logger for transparency
-  app.use((req, res, next) => {
-    const start = Date.now();
-    res.on('finish', () => {
-      const duration = Date.now() - start;
-      if (req.path.startsWith('/api')) {
-        console.log(`[API] ${req.method} ${req.path} -> ${res.statusCode} (${duration}ms)`);
-      }
-    });
-    next();
+  // Request Logging
+  app.use(requestLogger);
+
+  // Rate Limiting
+  app.use('/api', apiLimiter);
+
+  // Mount EcoMind Agri Core REST API Router
+  app.use('/api', apiRouter);
+
+  // Centralized Error Handling for API routes
+  app.use('/api', errorHandler);
+
+  // Seed Firestore in background if required
+  seedInitialAgriData().catch((err) => {
+    logger.warn('[Server Startup] Initial seed notice:', err?.message || err);
   });
 
-  // API Health Check
-  app.get('/api/health', (req, res) => {
-    res.json({
-      status: 'ok',
-      service: 'LandLink Agricultural Land Rental Platform API',
-      timestamp: new Date().toISOString(),
-      geoConstraint: '20 KM strict proximity',
-    });
-  });
-
-  // REST API Routes
-  app.use('/api/auth', authRouter);
-  app.use('/api/lands', landRouter);
-  app.use('/api/rentals', rentalRouter);
-  app.use('/api/admin', adminRouter);
-  app.use('/api/notifications', notificationRouter);
-
-  // Central Error Handler for APIs
-  app.use('/api/*', (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error('[API Error]', err);
-    res.status(err.status || 500).json({
-      success: false,
-      message: err.message || 'Internal server error occurred.',
-    });
-  });
-
-  // Vite Middleware for Development / Static serving for Production
+  // Vite Middleware for Development / Static Serving for Production
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -69,12 +62,14 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🌾 LandLink Agricultural Server running on http://0.0.0.0:${PORT}`);
-    console.log(`📍 20 KM Geolocation Filter engine initialized.`);
+    logger.info(`🌾 EcoMind Agri Production Backend listening on http://0.0.0.0:${PORT}`);
+    logger.info(`⚡ Connected to Cloud Firestore database via Firebase Admin SDK`);
+    logger.info(`📍 Strict 20 KM Geospatial Engine Active on all rental requests`);
   });
 }
 
 startServer().catch((err) => {
-  console.error('Failed to start LandLink server:', err);
+  console.error('Failed to start EcoMind Agri server:', err);
   process.exit(1);
 });
+
