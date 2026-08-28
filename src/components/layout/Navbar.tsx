@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchFocus }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [selectedCity, setSelectedCity] = useState('Bengaluru (Indiranagar)');
+  const [selectedCity, setSelectedCity] = useState('Chennai Central');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,12 +40,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchFocus }) => {
   const isDeliveryPartner = userProfile?.role === 'delivery_partner';
 
   const cities = [
-    'Bengaluru (Indiranagar)',
-    'Bengaluru (Whitefield)',
-    'Pune (Kothrud & Shivajinagar)',
-    'Mumbai (Bandra & Andheri)',
-    'Nashik (City Center)',
-    'Mysore (Jayalakshmipuram)'
+    'Chennai Central',
+    'Anna Nagar',
+    'T. Nagar',
+    'Adyar',
+    'Velachery',
+    'Tambaram',
+    'Porur',
+    'Guindy',
+    'Mylapore',
+    'Nungambakkam',
+    'Egmore',
+    'Perambur',
+    'Ambattur',
+    'Avadi',
+    'Sholinganallur',
+    'Thoraipakkam',
+    'OMR',
+    'ECR',
+    'Pallavaram',
+    'Chromepet',
+    'Medavakkam',
+    'Kolathur',
+    'Mogappair',
+    'Vadapalani',
+    'Saidapet',
+    'Besant Nagar',
+    'Royapettah',
+    'Kilpauk',
+    'Purasawalkam',
+    'Triplicane',
+    'Thiruvanmiyur'
   ];
 
   return (
@@ -408,7 +433,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchFocus }) => {
               We connect you with direct regional farm clusters in your immediate area for harvest-to-door delivery within 4 hours.
             </p>
 
-            <div className="space-y-2 my-4">
+            <div className="space-y-2 my-4 max-h-[60vh] overflow-y-auto pr-1">
               {cities.map((city) => (
                 <button
                   key={city}
