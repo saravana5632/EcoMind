@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest-950: #081c15;
+  --color-forest-900: #1b4332;
+  --color-forest-800: #2d6a4f;
+  --color-forest-700: #40916c;
+  --color-forest-600: #52b788;
+  --color-forest-500: #74c69d;
+  --color-forest-400: #95d5b2;
+  --color-forest-300: #b7e4c7;
+  --color-forest-200: #d8f3dc;
+  --color-forest-100: #eef9f2;
+  --color-forest-50: #f4fbf7;
+  
+  --color-surface-bg: #f8f9f5;
+  --color-surface-card: #ffffff;
+  --color-surface-border: #e2e8dc;
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #f8f9f5;
+    color: #1c1917;
+    margin: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom Leaflet Map styling to look clean and modern */
+.leaflet-container {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  border-radius: 16px;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px !important;
+  box-shadow: 0 10px 25px -5px rgba(27, 67, 50, 0.15), 0 8px 10px -6px rgba(27, 67, 50, 0.1) !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid #e2e8dc !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
