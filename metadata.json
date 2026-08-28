@@ -1,0 +1,6 @@
+{
+  "name": "EcoMind Fresh",
+  "description": "Farm-to-door direct fresh produce marketplace and real-time delivery logistics platform connecting customers and local farmers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

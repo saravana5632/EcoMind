@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "users": {
+      "title": "User Profiles",
+      "description": "User profiles for customers and delivery partners in EcoMind Fresh",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "delivery_partner", "farmer", "admin", "landlord"] },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "pincode": { "type": "string" },
+        "vehicleType": { "type": "string" },
+        "vehicleNumber": { "type": "string" },
+        "licenseNumber": { "type": "string" },
+        "serviceArea": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "isOnline": { "type": "boolean" },
+        "rating": { "type": "number" },
+        "completedDeliveries": { "type": "number" },
+        "totalDeliveries": { "type": "number" },
+        "earnings": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "phone", "role"]
+    },
+    "products": {
+      "title": "Fresh Farm Products",
+      "description": "Products created by farmers from EcoMind Agri and purchased in EcoMind Fresh",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string", "enum": ["Fruits", "Vegetables", "Leafy Vegetables", "Grains"] },
+        "price": { "type": "number" },
+        "unit": { "type": "string" },
+        "availableQuantity": { "type": "number" },
+        "farmerId": { "type": "string" },
+        "farmerName": { "type": "string" },
+        "farmerPhone": { "type": "string" },
+        "location": { "type": "string" },
+        "harvestDate": { "type": "string" },
+        "freshness": { "type": "string" },
+        "image": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["available", "low_stock", "sold_out"] },
+        "organicCertified": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "category", "price", "availableQuantity", "farmerName", "location"]
+    },
+    "orders": {
+      "title": "Customer Orders",
+      "description": "Direct farm orders placed by customers and fulfilled by delivery partners",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "deliveryAddress": { "type": "string" },
+        "city": { "type": "string" },
+        "pincode": { "type": "string" },
+        "deliverySlot": { "type": "string" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "orderStatus": { "type": "string", "enum": ["placed", "confirmed", "preparing", "ready_for_pickup", "picked_up", "out_for_delivery", "delivered", "cancelled"] },
+        "deliveryPartnerId": { "type": "string" },
+        "deliveryPartnerName": { "type": "string" },
+        "deliveryPartnerPhone": { "type": "string" },
+        "deliveryPartnerVehicle": { "type": "string" },
+        "pickupLocation": { "type": "string" },
+        "distanceKm": { "type": "number" },
+        "partnerEarnings": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "completedAt": { "type": "string" }
+      },
+      "required": ["customerId", "customerName", "items", "totalAmount", "deliveryAddress", "phone", "orderStatus"]
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "System and real-time delivery notifications for users",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "role": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "orderId": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "title", "message", "createdAt"]
+    }
+  }
+}

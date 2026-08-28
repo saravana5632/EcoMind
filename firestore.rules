@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Users Collection (Allow user profiles to be created, read, and updated for customer & partner tracking)
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
+    // Products Collection (Shared with App 1 - Farmers list, seeders initialize, customers browse & deduct stock)
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if true;
+    }
+
+    // Orders Collection (Shared with App 1 & App 2 - Customers place, Delivery partners accept and track)
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
+    // Notifications Collection (Real-time order & dispatch alerts)
+    match /notifications/{notificationId} {
+      allow read, create, update, delete: if true;
+    }
+  }
+}
