@@ -1,0 +1,15 @@
+export const ENV = {
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  PORT: parseInt(process.env.PORT || '3000', 10),
+  FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || 'pioneering-discipline-tlg2z',
+  FIREBASE_DATABASE_ID: process.env.FIREBASE_DATABASE_ID || 'ai-studio-landlinksmartagr-079ab495-9a1b-45d8-909b-af88f5416a4a',
+  FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET || 'pioneering-discipline-tlg2z.firebasestorage.app',
+  FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL || '',
+  FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+  WEATHER_API_KEY: process.env.WEATHER_API_KEY || '',
+  SOIL_API_KEY: process.env.SOIL_API_KEY || '',
+  MARKET_API_KEY: process.env.MARKET_API_KEY || '',
+  JWT_SECRET: process.env.JWT_SECRET || 'ecomind-agri-jwt-secret-2026-production',
+  CORS_ORIGINS: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:5173', 'http://localhost:3000', '*'],
+};

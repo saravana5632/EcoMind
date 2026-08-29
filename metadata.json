@@ -1,0 +1,6 @@
+{
+  "name": "LandLink - Smart Agricultural Land Rental Platform",
+  "description": "Full-stack Landlord-Farmer agricultural land management & rental platform with 20km geolocation filtering, role-based access, and interactive mapping.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
