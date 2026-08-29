@@ -790,6 +790,9 @@ This allows the platform to coordinate the entire operational workflow.
 # 🏗️ System Architecture
 
 ![EcoMind System Architecture](src/images/app1.png)
+
+
+![EcoMind System Architecture](src/images/app2.png)
 ---
 
 # 🔐 Role-Based Access
